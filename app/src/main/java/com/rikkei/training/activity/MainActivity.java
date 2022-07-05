@@ -23,8 +23,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnB;
     String tag = "----Activity A----";
     MediaPlayer mediaPlayer;
-    long time, timeB;
-    Bundle bundle = null;
+    int time, timeB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,19 +34,14 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setTitle("Action A");
 
         btnB = findViewById(R.id.btnB);
-        Intent in = getIntent();
-        timeB = in.getLongExtra("keyB", 0);
-        time = in.getLongExtra("keyA", 0);
 
-        btnB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        if (savedInstanceState != null) time = savedInstanceState.getInt("key",0);
 
-                Intent intent = new Intent(MainActivity.this, ActivityB.class);
-                intent.putExtra("keyA", mediaPlayer.getCurrentPosition());
-                intent.putExtra("keyB", timeB);
-                startActivity(intent);
-            }
+        btnB.setOnClickListener(view -> {
+
+            Intent intent = new Intent(MainActivity.this, ActivityB.class);
+
+            startActivity(intent);
         });
         prepareMusic();
 
@@ -55,10 +49,16 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "ActivityA: onCreate", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("key", time);
+    }
+
     void prepareMusic() {
         mediaPlayer = MediaPlayer.create(this, R.raw.bai1);
         mediaPlayer.setLooping(true);
-        mediaPlayer.seekTo((int) time);
+        mediaPlayer.seekTo( time);
 
     }
 
@@ -79,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "ActivityA: onPause", Toast.LENGTH_SHORT).show();
         mediaPlayer.pause();
         time = mediaPlayer.getCurrentPosition();
-        bundle = new Bundle();
-        bundle.putLong("keyTimeA", time);
     }
 
     @Override
@@ -89,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(tag, "onStop");
         Toast.makeText(this, "ActivityA: onStop", Toast.LENGTH_SHORT).show();
         time = mediaPlayer.getCurrentPosition();
-        //mediaPlayer.stop();
+
     }
 
     @Override
@@ -97,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         Log.d(tag, "onStart");
         Toast.makeText(this, "ActivityA: onStart", Toast.LENGTH_SHORT).show();
-        mediaPlayer.seekTo((int) time);
+        mediaPlayer.seekTo(time);
         mediaPlayer.start();
     }
 
@@ -106,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.d(tag, "onResume");
         Toast.makeText(this, "ActivityA: onResume", Toast.LENGTH_SHORT).show();
-        mediaPlayer.seekTo((int) time);
+        mediaPlayer.seekTo( time);
         mediaPlayer.start();
     }
 }

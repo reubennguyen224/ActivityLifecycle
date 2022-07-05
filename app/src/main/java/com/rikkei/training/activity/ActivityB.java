@@ -22,8 +22,7 @@ public class ActivityB extends AppCompatActivity {
     Button btnA;
     String tag = "----Activity B----";
     MediaPlayer mediaPlayer;
-    long time, timeA;
-    Bundle bundle = null;
+    long time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,19 +34,11 @@ public class ActivityB extends AppCompatActivity {
 
         btnA = findViewById(R.id.btnA);
 
-        Intent in = getIntent();
-        timeA = in.getLongExtra("keyA", 0);
-        time = in.getLongExtra("keyB", 0);
 
-        btnA.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnA.setOnClickListener(view -> {
 
-                Intent intent = new Intent(ActivityB.this, MainActivity.class);
-                intent.putExtra("keyB", mediaPlayer.getCurrentPosition());
-                intent.putExtra("keyA", timeA);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(ActivityB.this, MainActivity.class);
+            startActivity(intent);
         });
 
 
@@ -93,8 +84,6 @@ public class ActivityB extends AppCompatActivity {
         Toast.makeText(this, "ActivityB: onPause", Toast.LENGTH_SHORT).show();
         mediaPlayer.pause();
         time = mediaPlayer.getCurrentPosition();
-        bundle = new Bundle();
-        bundle.putLong("keyTimeB", time);
     }
 
     @Override
